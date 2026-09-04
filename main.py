@@ -1,18 +1,18 @@
 # HangPython
 # Selects random word from list and prompts user for letter guesses to solve the word
-from mimetypes import guess_extension
-
 from words import *
 from game import *
+from game_files import *
 import sys
 
 def main():
-    word_list_path: str = "word_list.txt"
     while True:
         print("\n\nWelcome to HangPython!")
 
         # Load word list
-        word_list: list[str] = load_words(word_list_path)
+        config = load_config()
+        wordlist_path = config["wordlist_path"]
+        word_list: list[str] = load_words(wordlist_path)
 
         # Main Menu
         print("Main Menu")
@@ -41,7 +41,8 @@ def main():
                 new_path = input("Please enter the new file path >> ")
                 try:
                     validate_file(new_path)
-                    word_list_path = new_path
+                    config["wordlist_path"] = new_path
+                    save_config(config)
                 except ValueError as e:
                     print(e)
                     input("Press any key to continue...")
@@ -55,21 +56,6 @@ def main():
             print("Please enter the number for the option you wish to select")
             input("Press any key to continue...")
             continue
-
-def load_words(word_list_path):
-    try:
-        print(f"Loaded the word library located at {word_list_path}")
-        return get_words(word_list_path)
-    except OSError as e:
-        print(f"Error opening {word_list_path}: {e.strerror}")
-        return []
-
-def validate_file(file_path: str) -> bool | None:
-    if not file_path.endswith(".txt"):
-        raise ValueError("Filetype must be .txt")
-    if len(file_path[0:-4]) == 0:
-        raise ValueError("File name must not be blank")
-    return True
 
 def run_game(game: Game) -> dict | None:
     game.obscure_word(game.word)
