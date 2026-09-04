@@ -1,19 +1,35 @@
 # HangPython
 # Selects random word from list and prompts user for letter guesses to solve the word
+from mimetypes import guess_extension
+
 from words import *
+from game import *
 import sys
 
 def main():
     word_list_path: str = "word_list.txt"
     while True:
         print("\n\nWelcome to HangPython!")
+
+        # Load word list
         word_list: list[str] = load_words(word_list_path)
 
-        menu_choice = menu()
+        # Main Menu
+        print("Main Menu")
+        print("1. Start Game")
+        print("2. View Stats")
+        print("3. Change Word File")
+        print("4. Quit")
+        menu_choice = input(">> ")
 
         if menu_choice == "1":
             print("Starting game...")
-            input("Press any key to continue...")
+            game = Game(pick_word(word_list))
+            result = run_game(game)
+            if not result:
+                print("Game ended early")
+                continue
+
         elif menu_choice == "2":
             print("coming soon")
             input("Press any key to continue...")
@@ -53,14 +69,18 @@ def validate_file(file_path: str) -> bool | None:
         raise ValueError("File name must not be blank")
     return True
 
-
-def menu():
-    print("Main Menu")
-    print("1. Start Game")
-    print("2. View Stats")
-    print("3. Change Word File")
-    print("4. Quit")
-    return input(">> ")
+def run_game(game: Game) -> list | None:
+    game.obscure_word(game.word)
+    while True:
+        print(game.game_state())
+        guess = input("Guess a letter (1 to quit) >> ")
+        if guess == "1":
+            return None
+        try:
+            game.guess_letter(guess)
+        except ValueError as e:
+            print(e)
+            continue
 
 if __name__ == "__main__":
     main()
