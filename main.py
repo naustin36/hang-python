@@ -13,9 +13,10 @@ def main():
 
         if menu_choice == "1":
             print("Starting game...")
-            input()
+            input("Press any key to continue...")
         elif menu_choice == "2":
-            input("coming soon")
+            print("coming soon")
+            input("Press any key to continue...")
         elif menu_choice == "3":
             choice = input("Update word file? Y/N >> ")
             if choice.lower() == "y":
@@ -25,7 +26,7 @@ def main():
                     word_list_path = new_path
                 except ValueError as e:
                     print(e)
-                    input()
+                    input("Press any key to continue...")
                     continue
             else:
                 continue
@@ -34,18 +35,15 @@ def main():
             sys.exit(0)
         else:
             print("Please enter the number for the option you wish to select")
-            input()
+            input("Press any key to continue...")
             continue
 
 def load_words(word_list_path):
     try:
         print(f"Loaded the word library located at {word_list_path}")
         return get_words(word_list_path)
-    except OSError:
-        print(f"Error opening file: {word_list_path}")
-        return []
-    except Exception as e:
-        print(e)
+    except OSError as e:
+        print(f"Error opening {word_list_path}: {e.strerror}")
         return []
 
 def validate_file(file_path: str) -> bool | None:
