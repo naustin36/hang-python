@@ -24,7 +24,9 @@ def main():
 
         if menu_choice == "1":
             print("Starting game...")
+            # Create game object
             game = Game(pick_word(word_list))
+            # Run the game and store the outcome
             result = run_game(game)
             if not result:
                 print("Game ended early")
@@ -69,11 +71,11 @@ def validate_file(file_path: str) -> bool | None:
         raise ValueError("File name must not be blank")
     return True
 
-def run_game(game: Game) -> list | None:
+def run_game(game: Game) -> dict | None:
     game.obscure_word(game.word)
     while True:
-        print(game.game_state())
-        guess = input("Guess a letter (1 to quit) >> ")
+        game.game_state()
+        guess = input("Guess a letter (1 to quit) >> ").lower()
         if guess == "1":
             return None
         try:
@@ -81,6 +83,14 @@ def run_game(game: Game) -> list | None:
         except ValueError as e:
             print(e)
             continue
+        if game.has_lost():
+            game.game_state()
+            print("You Lost!")
+            return game.game_over("loss")
+        if game.has_won():
+            game.game_state()
+            print("You Won!")
+            return game.game_over("win")
 
 if __name__ == "__main__":
     main()
