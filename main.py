@@ -17,6 +17,10 @@ def main():
 
     print(f"All words found: {word_list}")
 
+    print(f"Pikcing a random word from {word_list_path}...")
+    word = pick_word(word_list)
+    print(f"{word} is the word!")
+
 
 if __name__ == "__main__":
     main()
