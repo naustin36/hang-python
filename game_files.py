@@ -4,6 +4,13 @@ from pathlib import Path
 CONFIG_FILE = Path("config.json")
 DEFAULT_CONFIG = {"wordlist_path": "word_list.txt"}
 
+STATS_FILE = Path("stats.json")
+DEFAULT_STATS = {
+    "games_played":0,
+    "wins":0,
+    "losses":0,
+}
+
 def validate_file(file_path: str) -> bool | None:
     if not file_path.endswith(".txt"):
         raise ValueError("Filetype must be .txt")
@@ -23,5 +30,13 @@ def save_config(config_data: dict) -> None:
     with open(CONFIG_FILE, "w") as f:
         json.dump(config_data, f, indent=4)
 
-def update_word_file(file_path: str) -> None:
+def clean_word_list(word_list: list[str]):
+    # Strip all words containing special characters or words that are too short
+    # For user submitted files
+    pass
+
+def load_stats() -> dict:
+    pass
+
+def save_stats() -> None:
     pass
