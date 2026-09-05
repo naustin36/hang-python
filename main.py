@@ -3,16 +3,16 @@
 from words import *
 from game import *
 from game_files import *
+from pathlib import Path
 import sys
 
 def main():
+    config = load_config()
+    wordlist_path = config["wordlist_path"]
+    word_list: list[str] = load_words(wordlist_path)
+
     while True:
         print("\n\nWelcome to HangPython!")
-
-        # Load word list
-        config = load_config()
-        wordlist_path = config["wordlist_path"]
-        word_list: list[str] = load_words(wordlist_path)
 
         # Main Menu
         print("Main Menu")
@@ -38,20 +38,21 @@ def main():
             show_stats()
 
         elif menu_choice == "3":
-            choice = input("Update word file? Y/N >> ")
+            print(f"Current word file: {wordlist_path}")
+            choice = input("Change word file? Y/N >> ")
             if choice.lower() == "y":
                 new_path = input("Please enter the new file path >> ")
-                try:
-                    validate_file(new_path)
-                    config["wordlist_path"] = new_path
-                    save_config(config)
-                    print("Successfully loaded new file")
-                except ValueError as e:
-                    print(e)
-                except OSError as e:
-                    print(e)
+                new_word_list = load_words(new_path)
+                if not new_word_list:
+                    print("No words found, reverting to previous file")
+                    continue
+                config["wordlist_path"] = new_path
+                save_config(config)
+                word_list = new_word_list
+                print("Successfully loaded new file")
             else:
                 continue
+
         elif menu_choice == "4":
             print("Goodbye!")
             sys.exit(0)
@@ -96,7 +97,6 @@ def record_stats(result: str):
         raise ValueError("can only record 'win' or 'loss'")
     stats["games_played"] += 1
     save_stats(stats)
-
 
 if __name__ == "__main__":
     main()
