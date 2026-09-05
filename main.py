@@ -43,9 +43,12 @@ def main():
                     validate_file(new_path)
                     config["wordlist_path"] = new_path
                     save_config(config)
+                    print("Successfully loaded new file")
                 except ValueError as e:
                     print(e)
-                    input("Press any key to continue...")
+                    continue
+                except OSError as e:
+                    print(e)
                     continue
             else:
                 continue

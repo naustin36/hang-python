@@ -14,8 +14,8 @@ DEFAULT_STATS = {
 def validate_file(file_path: str) -> bool | None:
     if not file_path.endswith(".txt"):
         raise ValueError("Filetype must be .txt")
-    if len(file_path[0:-4]) == 0:
-        raise ValueError("File name must not be blank")
+    if not Path(file_path).exists():
+        raise OSError("File not found")
     return True
 
 def load_config() -> dict:
