@@ -26,19 +26,12 @@ class Game:
                     self.obscured_word[i] = letter
         else:
             self.python += self.complete_python[0+len(self.python)]
+        self.round += 1
 
     def has_lost(self):
         return self.python == self.complete_python
     def has_won(self):
         return "".join(self.obscured_word) == self.word
-
-    def game_over(self, result: str) -> dict:
-        return {
-            "result":result,
-            "word":"".join(self.obscured_word),
-            "python":self.python,
-            "guesses":" ".join(self.guesses)
-        }
 
     def game_state(self):
         print(f"Round {self.round}")

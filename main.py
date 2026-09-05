@@ -32,9 +32,11 @@ def main():
                 print("Game ended early")
                 continue
 
+            record_stats(result)
+
         elif menu_choice == "2":
-            print("coming soon")
-            input("Press any key to continue...")
+            show_stats()
+
         elif menu_choice == "3":
             choice = input("Update word file? Y/N >> ")
             if choice.lower() == "y":
@@ -46,10 +48,8 @@ def main():
                     print("Successfully loaded new file")
                 except ValueError as e:
                     print(e)
-                    continue
                 except OSError as e:
                     print(e)
-                    continue
             else:
                 continue
         elif menu_choice == "4":
@@ -58,9 +58,8 @@ def main():
         else:
             print("Please enter the number for the option you wish to select")
             input("Press any key to continue...")
-            continue
 
-def run_game(game: Game) -> dict | None:
+def run_game(game: Game) -> str | None:
     game.obscure_word(game.word)
     while True:
         game.game_state()
@@ -75,11 +74,29 @@ def run_game(game: Game) -> dict | None:
         if game.has_lost():
             game.game_state()
             print("You Lost!")
-            return game.game_over("loss")
+            return "loss"
         if game.has_won():
             game.game_state()
             print("You Won!")
-            return game.game_over("win")
+            return "win"
+
+def show_stats() -> None:
+    stats = load_stats()
+    print(f"Games Played: {stats["games_played"]}")
+    print(f"Games Won: {stats["wins"]}")
+    print(f"Games Lost: {stats["losses"]}")
+
+def record_stats(result: str):
+    stats = load_stats()
+    if result == "win":
+        stats["wins"] += 1
+    elif result == "loss":
+        stats["losses"] += 1
+    else:
+        raise ValueError("can only record 'win' or 'loss'")
+    stats["games_played"] += 1
+    save_stats(stats)
+
 
 if __name__ == "__main__":
     main()

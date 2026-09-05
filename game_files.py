@@ -36,7 +36,12 @@ def clean_word_list(word_list: list[str]):
     pass
 
 def load_stats() -> dict:
-    pass
+    if not STATS_FILE.exists():
+        return DEFAULT_STATS
 
-def save_stats() -> None:
-    pass
+    with open(STATS_FILE, "r") as f:
+        return json.load(f)
+
+def save_stats(stats: dict) -> None:
+    with open(STATS_FILE, "w") as f:
+        json.dump(stats, f, indent=4)
